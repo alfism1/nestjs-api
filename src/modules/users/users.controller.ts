@@ -17,18 +17,21 @@ import { User } from '@prisma/client';
 import { LoginResponse } from './interfaces/users-login.interface';
 import { ExpressRequestWithUser } from './interfaces/express-request-with-user.interface';
 import { UserData } from './interfaces/user-data.interface';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
   // inject users service
   constructor(private readonly usersService: UsersService) {}
 
+  @Public() // <--- Set register as public route
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     // call users service method to register new user
     return this.usersService.registerUser(createUserDto);
   }
 
+  @Public() // <--- Set login as public route
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto): Promise<LoginResponse> {
     // call users service method to login user
