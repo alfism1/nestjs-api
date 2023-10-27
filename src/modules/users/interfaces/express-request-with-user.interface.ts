@@ -1,6 +1,6 @@
 import { Request as ExpressRequest } from 'express';
-import { UserData } from './user-data.interface';
+import { UserPayload } from './users-login.interface';
 
 export interface ExpressRequestWithUser extends ExpressRequest {
-  user: UserData & { iat: number; exp: number };
+  user: UserPayload & { iat: number; exp: number };
 }

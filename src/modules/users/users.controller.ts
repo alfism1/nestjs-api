@@ -14,9 +14,8 @@ import { UpdateUsertDto } from './dtos/update-user.dto';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { UsersService } from './users.service';
 import { User } from '@prisma/client';
-import { LoginResponse } from './interfaces/users-login.interface';
+import { LoginResponse, UserPayload } from './interfaces/users-login.interface';
 import { ExpressRequestWithUser } from './interfaces/express-request-with-user.interface';
-import { UserData } from './interfaces/user-data.interface';
 import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
@@ -39,7 +38,7 @@ export class UsersController {
   }
 
   @Get('me')
-  me(@Request() req: ExpressRequestWithUser): UserData {
+  me(@Request() req: ExpressRequestWithUser): UserPayload {
     return req.user;
   }
 
