@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUsertDto } from './dtos/update-user.dto';
@@ -33,8 +34,8 @@ export class UsersController {
   }
 
   @Get('me')
-  me(): string {
-    return 'Get my Profile!';
+  me(@Request() req) {
+    return req.user;
   }
 
   @Patch(':id')

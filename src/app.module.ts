@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { CoreModule } from './core/core.module';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
     // add jwt module
     JwtModule.register({
       global: true,
-      secret: 'super_secret_key',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '12h' },
 
       // secret: process.env.JWT_SECRET,
@@ -20,6 +22,12 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
