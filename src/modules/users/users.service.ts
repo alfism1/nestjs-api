@@ -77,7 +77,8 @@ export class UsersService {
       };
     } catch (error) {
       // throw error if any
-      throw new HttpException(error, 500);
+      // throw new HttpException(error, 500);
+      throw new HttpException(error, error.status);
     }
   }
 
