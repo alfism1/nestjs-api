@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,8 @@ import { Post as CPost } from '@prisma/client';
 import { Public } from 'src/common/decorators/public.decorator';
 import { IsMineGuard } from 'src/common/guards/is-mine.guard';
 import { ExpressRequestWithUser } from '../users/interfaces/express-request-with-user.interface';
+import { QueryPaginationDto } from 'src/common/dtos/query-pagination.dto';
+import { PaginateOutput } from 'src/common/utils/pagination.utils';
 
 @Controller('posts')
 export class PostsController {
@@ -35,8 +38,10 @@ export class PostsController {
 
   @Public()
   @Get()
-  getAllPosts(): Promise<CPost[]> {
-    return this.postsService.getAllPosts();
+  getAllPosts(
+    @Query() query?: QueryPaginationDto,
+  ): Promise<PaginateOutput<CPost>> {
+    return this.postsService.getAllPosts(query);
   }
 
   @Public()
