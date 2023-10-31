@@ -72,5 +72,21 @@ describe('Superb API (e2e)', () => {
         access_token: expect.any(String),
       });
     });
+
+    it('should not login a user', async () => {
+      const user = {
+        email: 'wronguser@e2e.test',
+        password: '12345678',
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/users/login')
+        .send(user)
+
+        .expect(404);
+
+      expect(response.body.message).toEqual('User not found');
+      expect(response.body.status).toEqual(404);
+    });
   });
 });
