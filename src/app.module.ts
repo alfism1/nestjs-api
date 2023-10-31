@@ -11,22 +11,23 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    UsersModule,
-    PostsModule,
-    CoreModule,
-    // add jwt module
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '12h' },
-    }),
-    // See here. Add config module
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV
         ? `.env.${process.env.NODE_ENV}`
         : '.env',
       isGlobal: true,
     }),
+    // add jwt module
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '12h' },
+    }),
+
+    UsersModule,
+    PostsModule,
+    CoreModule,
+    // See here. Add config module
   ],
   controllers: [AppController],
   providers: [
