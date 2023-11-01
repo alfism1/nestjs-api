@@ -19,20 +19,62 @@ import { LoginResponse, UserPayload } from './interfaces/users-login.interface';
 import { ExpressRequestWithUser } from './interfaces/express-request-with-user.interface';
 import { Public } from 'src/common/decorators/public.decorator';
 import { IsMineGuard } from 'src/common/guards/is-mine.guard';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+// 💡 See here. Add this decorator to add tags to swagger docs
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  // inject users service
   constructor(private readonly usersService: UsersService) {}
 
-  @Public() // <--- Set register as public route
+  @Public()
   @Post('register')
+  // 💡 See here. Add this decorator to add operationId
+  @ApiOperation({
+    summary: 'Register a new user',
+    operationId: 'create',
+  })
+  // 💡 See here. Add this decorator to add API Success response
+  @ApiResponse({
+    status: 201,
+    description: 'Created',
+    type: CreateUserDto,
+  })
+  // 💡 See here. Add this decorator to add API Bad Request response
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    schema: {
+      example: {
+        message: [
+          'email must be an email',
+          'email should not be empty',
+          'password should not be empty',
+          'name should not be empty',
+        ],
+        error: 'Bad Request',
+        statusCode: 400,
+      },
+    },
+  })
+  // 💡 See here. Add this decorator to add API Conflict response
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict',
+    schema: {
+      example: {
+        message: 'Email already registered',
+        error: 'Conflict',
+        statusCode: 409,
+      },
+    },
+  })
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     // call users service method to register new user
     return this.usersService.registerUser(createUserDto);
   }
 
-  @Public() // <--- Set login as public route
+  @Public()
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto): Promise<LoginResponse> {
     // call users service method to login user
@@ -45,7 +87,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseGuards(IsMineGuard) // <--- 💡 Prevent user from updating other user's data
+  @UseGuards(IsMineGuard)
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUsertDto,
@@ -55,7 +97,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(IsMineGuard) // <--- 💡 Prevent user from deleting other user's data
+  @UseGuards(IsMineGuard)
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<string> {
     // call users service method to delete user
     return this.usersService.deleteUser(+id);
